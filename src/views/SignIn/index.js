@@ -5,8 +5,7 @@ import { ImageBackground, StyleSheet, Text, View } from "react-native"
 import InputCustom from "../../components/Input";
 import Logo from "../../components/Logo";
 import CustomButton from "../../components/Button";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { login } from "../../client/routes/auth";
 
 const background = require('../../../assets/FUNDO.jpg')
 
@@ -27,22 +26,14 @@ const SignIn = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.get('https://grow-up-api-jcvi.onrender.com/api/auth/v1/auth', {
-                params: {
-                    email: userInput,
-                    password: passwordInput
-                }
-            });
+            // Chama a função de login (substitua login por sua implementação real)
+            await login(userInput, passwordInput);
 
-            if (response.status === 200) {
-                const token = response.data;
-
-                await AsyncStorage.setItem('authToken', token);
-            } else {
-                alert('Erro ao realizar o login');
-            }
+            // Se o login for bem-sucedido, navega para a tela 'Dashboard'
+            navigation.navigate('DashBoard');
         } catch (error) {
             console.error('Erro ao realizar o login:', error);
+            Alert.alert('Erro', 'Erro ao tentar realizar o login. Por favor, tente novamente.');
         }
     };
 
@@ -60,7 +51,7 @@ const SignIn = () => {
 
                 <CustomButton title={'Acessar'} backgroundColor={'#102900'} width={150} marginBottom={5} marginTop={5} textColor={'#fff'} fontSize={20} top={80} onPress={handleLogin} />
 
-                <CustomButton title={'Criar conta'} width={150} textColor={'#fff'} fontSize={20} top={80} onPress={handleLogin} />
+                <CustomButton title={'Criar conta'} width={150} textColor={'#fff'} fontSize={20} top={80} />
             </ImageBackground>
         </View>
     )

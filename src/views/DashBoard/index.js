@@ -1,14 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, StatusBar, SafeAreaView, Text, View } from 'react-native';
+import { StyleSheet, StatusBar, SafeAreaView, Text, View, Button } from 'react-native';
 
 
 import CustomButton2 from "../../components/Button2";
 import CustomButton from "../../components/Button";
+import { signOut } from '../../client/routes/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function App() {
-    const navigation = useNavigation()
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    const checkAuthToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('authToken');
+        if (!token) {
+          navigation.navigate('SignIn')
+        }
+      } catch (error) {
+        console.error('Erro ao verificar o authToken:', error);
+      }
+    };
+
+    checkAuthToken();
+  }, []);
 
   const alertames = () => {
     alert(`Escolha um mês`);
@@ -16,9 +33,14 @@ export default function App() {
   const alertadia = () => {
     alert(`Escolha um dia`);
   };
-    const addgasto = () => {
+  const addgasto = () => {
     navigation.navigate('Register')
   };
+
+  const handleSignOut = async () => {
+    await signOut()
+    navigation.navigate('SignIn')
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,6 +62,7 @@ export default function App() {
             onPress={alertadia}
           />
           <View style={styles.espacamento} />
+          <Button title='SAIR' onPress={handleSignOut} />
           <CustomButton2
             title={'MÊS'}
             backgroundColor={'#535353'}
@@ -52,22 +75,22 @@ export default function App() {
           />
         </View>
         <View style={styles.quadrado2}>
-            <View style={styles.conteiner2}>
-                <View style={styles.esquerda}>
-                   <Text style={[styles.gastos]}>Gastos</Text> 
-                </View>
-                <View style={styles.espacamento} />
-                <View style={styles.direita}>
-                    <CustomButton title={'+'} textColor={'black'} backgroundColor={'#3B9A00'} fontSize={25} alignItems={'center'} justifyContent={'center'} padding={0} width={45} height={100} onPress={addgasto}> </CustomButton>
-                </View>
+          <View style={styles.conteiner2}>
+            <View style={styles.esquerda}>
+              <Text style={[styles.gastos]}>Gastos</Text>
             </View>
-            <View style={styles.textogasto}>
-            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
-            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
-            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
-            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
-            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
+            <View style={styles.espacamento} />
+            <View style={styles.direita}>
+              <CustomButton title={'+'} textColor={'black'} backgroundColor={'#3B9A00'} fontSize={25} alignItems={'center'} justifyContent={'center'} padding={0} width={45} height={100} onPress={addgasto}> </CustomButton>
             </View>
+          </View>
+          <View style={styles.textogasto}>
+            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
+            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
+            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
+            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
+            <Text style={[styles.texto]}>Vacina bovina R$139,26         26 NOV 2023</Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>

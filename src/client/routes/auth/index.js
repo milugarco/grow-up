@@ -1,8 +1,36 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../..";
+import axios from "axios";
+
 
 export async function login(email, password) {
-  (await api())
-    .get(`auth/v1/auth?email=${email}&password=${password}`)
-    .then(response => { return response })
-    .catch(error => { return error })
+  try {
+    const response = await axios.get('https://grow-up-api-jcvi.onrender.com/api/auth/v1/auth', {
+      params: {
+        email: email,
+        password: password
+      }
+    });
+
+    if (response.status === 200) {
+      const token = response.data;
+
+      await AsyncStorage.setItem('authToken', token);
+
+    } else {
+      alert('Erro ao realizar o login');
+    }
+  } catch (error) {
+    console.error('Erro ao realizar o login:', error);
+  }
 }
+
+export const signOut = async () => {
+  try {
+    await AsyncStorage.removeItem('authToken');
+    console.log('Logout bem-sucedido!');
+  } catch (error) {
+    console.error('Erro ao realizar o logout:', error);
+    Alert.alert('Erro', 'Erro ao tentar fazer logout. Por favor, tente novamente.');
+  }
+};
