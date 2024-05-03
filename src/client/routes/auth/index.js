@@ -16,11 +16,16 @@ export async function login(email, password) {
 
       await AsyncStorage.setItem('authToken', token);
 
-    } else {
-      alert('Erro ao realizar o login');
-    }
+      return {
+        status: response.status
+      };
+    } 
+
   } catch (error) {
     console.error('Erro ao realizar o login:', error);
+    return {
+      error: error.message
+    };
   }
 }
 

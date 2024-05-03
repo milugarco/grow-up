@@ -26,9 +26,13 @@ const SignIn = () => {
 
     const handleLogin = async () => {
         try {
-            await login(userInput, passwordInput);
+            const {status} = await login(userInput, passwordInput);
 
-            navigation.navigate('DashBoard');
+            if(status === 200) {
+                navigation.navigate('DashBoard');
+            }
+
+            alert('Erro ao realizar login')
         } catch (error) {
             console.error('Erro ao realizar o login:', error);
         }
