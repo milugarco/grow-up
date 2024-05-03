@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { api } from "../..";
 import axios from "axios";
 
 
@@ -9,7 +8,7 @@ export async function login(email, password) {
       params: {
         email: email,
         password: password
-      }
+      },
     });
 
     if (response.status === 200) {

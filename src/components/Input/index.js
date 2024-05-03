@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { TextInput } from "react-native";
 
-const InputCustom = ({ placeholder, backgroundColor, width, marginBottom, marginTop, top, onChange }) => {
+const InputCustom = ({ placeholder, backgroundColor, width, height, marginBottom, marginTop, top, onChange }) => {
     const [newValue, setNewValue] = useState();
 
     const handleChange = (value) => {
         setNewValue(value);
-        // Chama a função fornecida pelo componente pai para notificar sobre a mudança
         if (onChange) {
             onChange(value);
         }
@@ -20,7 +19,7 @@ const InputCustom = ({ placeholder, backgroundColor, width, marginBottom, margin
                 backgroundColor: backgroundColor,
                 width: width,
                 fontSize: 15,
-                height: 45,
+                height: height ? height : 45,
                 padding: 15,
                 textAlign: 'center',
                 borderRadius: 50,
@@ -28,6 +27,7 @@ const InputCustom = ({ placeholder, backgroundColor, width, marginBottom, margin
                 marginTop: marginTop ? marginTop : 0,
                 top: top ? top : 0
             }}
+            textContentType="newPassword"
             onChangeText={handleChange}
         />
     );

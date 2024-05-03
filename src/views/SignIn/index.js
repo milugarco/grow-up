@@ -26,15 +26,16 @@ const SignIn = () => {
 
     const handleLogin = async () => {
         try {
-            // Chama a função de login (substitua login por sua implementação real)
             await login(userInput, passwordInput);
 
-            // Se o login for bem-sucedido, navega para a tela 'Dashboard'
             navigation.navigate('DashBoard');
         } catch (error) {
             console.error('Erro ao realizar o login:', error);
-            Alert.alert('Erro', 'Erro ao tentar realizar o login. Por favor, tente novamente.');
         }
+    };
+
+    const handleRegister = () => {
+        navigation.navigate('Register');
     };
 
     return (
@@ -45,13 +46,13 @@ const SignIn = () => {
                     Faça login:
                 </Text>
 
-                <InputCustom placeholder={'Digite aqui seu usuário'} backgroundColor={'#fff'} width={250} onChange={handleInputUserChange} top={80} marginBottom={25} marginTop={45} />
+                <InputCustom placeholder={'Digite aqui seu email'} backgroundColor={'#fff'} width={250} onChange={handleInputUserChange} top={80} marginBottom={25} marginTop={45} />
 
-                <InputCustom placeholder={'Digite aqui seu usuário'} backgroundColor={'#fff'} width={250} onChange={handleInputPasswordChange} top={80} marginBottom={18} />
+                <InputCustom placeholder={'Digite aqui sua senha'} backgroundColor={'#fff'} width={250} onChange={handleInputPasswordChange} top={80} marginBottom={18} />
 
                 <CustomButton title={'Acessar'} backgroundColor={'#102900'} width={150} marginBottom={5} marginTop={5} textColor={'#fff'} fontSize={20} top={80} onPress={handleLogin} />
 
-                <CustomButton title={'Criar conta'} width={150} textColor={'#fff'} fontSize={20} top={80} />
+                <CustomButton title={'Criar conta'} width={150} textColor={'#fff'} fontSize={20} top={80} onPress={handleRegister} />
             </ImageBackground>
         </View>
     )
