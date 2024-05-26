@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { findAllDebts } from "../../client/routes/debt";
+import { deleteDebt, findAllDebts } from "../../client/routes/debt";
 import { formatDate } from "../../utils/date-format";
+import { ReactNativeModal } from 'react-native-modal'
 
 export default function ListDebtsScreen() {
   const navigation = useNavigation()
@@ -15,10 +16,20 @@ export default function ListDebtsScreen() {
   const [page, setPage] = useState(1)
   const [nextPage, setNextPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [activeDebt, setActiveDebt] = useState(null);
 
   useEffect(() => {
     handleFindDebts()
   }, [page]);
+
+  const toggleModal = (debtId) => {
+    if (debtId) {
+      setActiveDebt(debtId);
+    }
+
+    setIsModalVisible(!isModalVisible);
+  };
 
   const handleFindDebts = async () => {
     try {
@@ -50,8 +61,33 @@ export default function ListDebtsScreen() {
         console.log(totalPages)
         return;
       }
+      if (page === 1) {
+        return;
+      }
       return setPage(page - 1)
     }
+  }
+
+  const handleDeleteDebt = async () => {
+    try {
+      const response = await deleteDebt(activeDebt);
+      if (response.status === 200) {
+        setActiveDebt(null);
+        toggleModal(null)
+        alert('Divida deletada com sucesso');
+        return handleFindDebts()
+      } else {
+        toggleModal(null)
+        alert('Erro ao deletar divida');
+        return handleFindDebts()
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const handleUpdateDebt = (debtId) => {
+    navigation.navigate('DebtScreen', { activeDebt: debtId });
   }
 
   return (
@@ -72,12 +108,14 @@ export default function ListDebtsScreen() {
                   </Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', width: '80%', justifyContent: 'center', gap: 16 }}>
-                  <TouchableOpacity style={{ width: 64, height: 29, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: '#3B9A00' }}>
+                  <TouchableOpacity onPress={() => handleUpdateDebt(debt.id)} style={{ width: 64, height: 29, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: '#3B9A00' }}>
                     <Text style={{ fontSize: 13, fontWeight: 900, color: 'white' }}>
                       Editar
                     </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={{ width: 72, height: 29, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: '#FF0000' }}>
+                  <TouchableOpacity
+                    onPress={() => toggleModal(debt.id)}
+                    style={{ width: 72, height: 29, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: '#FF0000' }}>
                     <Text style={{ fontSize: 13, fontWeight: 900, color: 'white' }}>
                       Excluir
                     </Text>
@@ -111,7 +149,7 @@ export default function ListDebtsScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-        
+
         <Text style={{ position: 'absolute', bottom: 4, left: 295, backgroundColor: '#3B9A00', width: 25, height: 25, textAlign: 'center', borderRadius: 25, color: 'white' }}>
           {page}
         </Text>
@@ -121,6 +159,26 @@ export default function ListDebtsScreen() {
           </Text>
         )}
       </View >
+
+      <ReactNativeModal isVisible={isModalVisible}>
+        <View style={styles.modalContent}>
+          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+            Deseja realmente excluir a divida? {activeDebt}
+          </Text>
+          <View style={{ display: 'flex', flexDirection: 'row', width: '80%', justifyContent: 'center', gap: 16 }}>
+            <TouchableOpacity onPress={handleDeleteDebt} style={{ width: 64, height: 29, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: '#3B9A00' }}>
+              <Text style={{ fontSize: 13, fontWeight: 900, color: 'white' }}>
+                Sim
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => toggleModal(null)} style={{ width: 72, height: 29, alignItems: 'center', justifyContent: 'center', borderRadius: 16, backgroundColor: '#FF0000' }}>
+              <Text style={{ fontSize: 13, fontWeight: 900, color: 'white' }}>
+                Não
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ReactNativeModal>
     </SafeAreaView >
   );
 }
@@ -144,6 +202,16 @@ const styles = StyleSheet.create({
     height: '85%',
     borderRadius: 20,
     padding: 20,
+  },
+  modalContent: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    width: 250,
+    padding: 22,
+    gap: 10,
+    alignSelf: 'center',
   },
   title: {
     color: '#102900',

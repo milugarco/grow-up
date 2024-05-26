@@ -19,7 +19,7 @@ export async function login(email, password) {
       return {
         status: response.status
       };
-    } 
+    }
 
   } catch (error) {
     console.error('Erro ao realizar o login:', error);

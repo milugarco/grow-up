@@ -125,7 +125,7 @@ export default function App() {
             DIA:
           </Text>
           <Picker
-            selectedValue={day}
+            selectedValue={day.toString()}
             onValueChange={(itemValue) => handleDate(itemValue, 'day')}
             style={{ height: 45, width: 100, backgroundColor: '#535353', color: 'white', }}
           >
@@ -138,7 +138,7 @@ export default function App() {
             MÊS:
           </Text>
           <Picker
-            selectedValue={month}
+            selectedValue={month.toString()}
             onValueChange={(itemValue) => handleDate(itemValue, 'month')}
             style={{ height: 45, width: 100, backgroundColor: '#535353', color: 'white', }}
           >
