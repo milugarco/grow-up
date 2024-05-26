@@ -10,7 +10,7 @@ import { login } from "../../client/routes/auth";
 
 const background = require('../../../assets/FUNDO.jpg')
 
-const SignIn = () => {
+const Register = () => {
   const [userName, setUserName] = useState()
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
@@ -109,4 +109,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignIn
+export default Register

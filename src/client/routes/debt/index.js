@@ -123,6 +123,33 @@ export async function findOneDebt(debtId) {
   }
 }
 
+export async function getDebtReport() {
+  const token = await AsyncStorage.getItem('authToken');
+
+  const config = {
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const response = await axios.get('https://grow-up-api-jcvi.onrender.com/api/debts/v1/debt/report/2024', config);
+
+    if (response.status === 200) {
+      return {
+        data: response.data,
+        status: response.status
+      };
+    }
+  } catch (error) {
+    console.log('Erro ao buscar relatório de dívidas para 2024:', error.message);
+    return {
+      error: error.message
+    };
+  }
+}
+
 export async function deleteDebt(debtId) {
   const token = await AsyncStorage.getItem('authToken');
 

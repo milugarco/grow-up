@@ -8,6 +8,7 @@ const CustomButton = ({ title, backgroundColor, width, marginBottom, marginTop, 
     const mt = marginTop ? marginTop : 0
     const color = textColor ? textColor : 'white'
     const font = fontSize ? fontSize : 16
+    const br = w === 45 ? 100 : 16
 
     return (
         <TouchableOpacity
@@ -18,7 +19,7 @@ const CustomButton = ({ title, backgroundColor, width, marginBottom, marginTop, 
                 height: 45,
                 marginBottom: mb,
                 marginTop: mt,
-                borderRadius: 25,
+                borderRadius: br,
                 alignItems: 'center',
                 justifyContent: 'center',
                 top: top ? top : 0
